@@ -1,0 +1,467 @@
+{
+  "project": "Vantage V1 Lite",
+  "version": "1.0",
+  "date": "2026-03-31",
+  "source_docs": [
+    "07 Connectivity Diagram.pdf",
+    "07 Connectivity Reference.pdf",
+    "06 Component Dimensions.pdf"
+  ],
+
+  "power_rails": {
+    "VBAT": { "voltage": "3.0-4.2V", "source": "Battery cell", "consumers": ["PMIC input", "DRV2605L direct"] },
+    "VBUS": { "voltage": "5.0V", "source": "Pogo pins", "consumers": ["PMIC charge input"] },
+    "VDD_1V8": { "voltage": "1.8V", "source": "PMIC buck", "consumers": ["nRF5340 core", "mics", "flash"] },
+    "VDD_3V3": { "voltage": "3.3V", "source": "PMIC LDO", "consumers": ["I/O levels (optional)"] },
+    "GND": { "type": "ground", "note": "Continuous GND plane on Layer 2" }
+  },
+
+  "components": {
+    "U1": {
+      "component": "SoC",
+      "part_number": "nRF5340-QKAA",
+      "package": "aQFN94",
+      "body_mm": [7.0, 7.0, 0.85],
+      "pads": 94,
+      "library": "nordic-lib-kicad",
+      "footprint": "Nordic:QFN-94-1EP_7x7mm_P0.5mm"
+    },
+    "U2": {
+      "component": "Flash (16MB)",
+      "part_number": "W25Q128JV",
+      "package": "WSON-8",
+      "body_mm": [6.0, 5.0, 0.80],
+      "pads": 8,
+      "library": "kicad-official",
+      "footprint": "Package_SON:WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4.3mm"
+    },
+    "U3": {
+      "component": "PMIC",
+      "part_number": "nPM1300",
+      "package": "QFN-32",
+      "body_mm": [5.0, 5.0, 0.90],
+      "pads": 32,
+      "i2c_address": "0x6B",
+      "library": "nordic-lib-kicad",
+      "footprint": "Nordic:QFN-32-1EP_5x5mm_P0.5mm"
+    },
+    "U4": {
+      "component": "Haptic Driver",
+      "part_number": "DRV2605L",
+      "package": "DSBGA-9",
+      "body_mm": [1.50, 1.50, 0.625],
+      "pads": 9,
+      "i2c_address": "0x5A",
+      "library": "snapeda",
+      "footprint": "Package_BGA:DSBGA-9_1.5x1.5mm_P0.5mm"
+    },
+    "M1": {
+      "component": "MEMS Mic (9 o'clock)",
+      "part_number": "IM72D128V",
+      "package": "LGA",
+      "body_mm": [4.0, 3.0, 1.20],
+      "port": "Bottom port, 0.8mm PCB hole",
+      "library": "custom",
+      "footprint": "vantage:IM72D128V"
+    },
+    "M2": {
+      "component": "MEMS Mic (3 o'clock)",
+      "part_number": "IM72D128V",
+      "package": "LGA",
+      "body_mm": [4.0, 3.0, 1.20],
+      "port": "Bottom port, 0.8mm PCB hole",
+      "library": "custom",
+      "footprint": "vantage:IM72D128V"
+    },
+    "D1": {
+      "component": "RGB LED",
+      "package": "1615",
+      "body_mm": [1.6, 1.5, 0.55],
+      "library": "custom",
+      "footprint": "vantage:LED_1615_RGB"
+    },
+    "SW1": {
+      "component": "Tactile Button",
+      "package": "Side-mount IP67",
+      "body_mm": [4.0, 3.0, 2.5],
+      "library": "custom",
+      "footprint": "vantage:SW_SidePush_IP67"
+    },
+    "Y1": {
+      "component": "Crystal 32MHz",
+      "package": "2016",
+      "body_mm": [2.0, 1.6, 0.5],
+      "library": "kicad-official",
+      "footprint": "Crystal:Crystal_SMD_2016-4Pin_2.0x1.6mm"
+    },
+    "Y2": {
+      "component": "Crystal 32.768kHz",
+      "package": "1610",
+      "body_mm": [1.6, 1.0, 0.5],
+      "library": "kicad-official",
+      "footprint": "Crystal:Crystal_SMD_1610-2Pin_1.6x1.0mm"
+    },
+    "H1": {
+      "component": "LRA Coin Actuator",
+      "part_number": "e.g. Jinlong G0825001D",
+      "diameter_mm": 10.0,
+      "z_mm": 2.5,
+      "library": "custom",
+      "footprint": "vantage:LRA_10mm"
+    },
+    "BT1": {
+      "component": "Li-Po Pouch Cell",
+      "capacity": "350mAh",
+      "body_mm": [32, 20, 3.2],
+      "library": "custom",
+      "footprint": "vantage:Battery_Pouch_32x20"
+    },
+    "J1": {
+      "component": "Pogo Pin 1 (VBUS)",
+      "type": "Spring-loaded, gold-plated",
+      "diameter_mm": 2.0,
+      "library": "custom",
+      "footprint": "vantage:PogoPad_2mm"
+    },
+    "J2": {
+      "component": "Pogo Pin 2 (GND)",
+      "type": "Spring-loaded, gold-plated",
+      "diameter_mm": 2.0,
+      "library": "custom",
+      "footprint": "vantage:PogoPad_2mm"
+    },
+    "ANT1": {
+      "component": "BLE Antenna",
+      "type": "PCB trace (inverted-F) or ceramic chip",
+      "library": "custom",
+      "footprint": "vantage:ANT_PCB_Trace_BLE"
+    },
+    "FL1": {
+      "component": "Antenna Matching Inductor",
+      "package": "0402",
+      "library": "kicad-official",
+      "footprint": "Inductor_SMD:L_0402_1005Metric"
+    },
+    "FL2": {
+      "component": "Antenna Matching Capacitor",
+      "package": "0402",
+      "library": "kicad-official",
+      "footprint": "Capacitor_SMD:C_0402_1005Metric"
+    },
+    "R1": {
+      "component": "I2C Pull-up SCL",
+      "value": "4.7k",
+      "package": "0402",
+      "library": "kicad-official",
+      "footprint": "Resistor_SMD:R_0402_1005Metric"
+    },
+    "R2": {
+      "component": "I2C Pull-up SDA",
+      "value": "4.7k",
+      "package": "0402",
+      "library": "kicad-official",
+      "footprint": "Resistor_SMD:R_0402_1005Metric"
+    }
+  },
+
+  "interfaces": [
+    {
+      "id": 1,
+      "name": "PDM Audio (M1)",
+      "from": "U1",
+      "to": "M1",
+      "bus_type": "PDM",
+      "nets": [
+        { "name": "PDM_CLK", "type": "clock", "speed": "0.768-4.8 MHz", "note": "Shared with M2" },
+        { "name": "PDM_DIN", "type": "data", "speed": "0.768-4.8 MHz", "note": "Shared with M2 - L/R demux by clock edge" }
+      ],
+      "routing": { "criticality": "HIGH", "length_match_mm": 2, "crosses_flex": true }
+    },
+    {
+      "id": 2,
+      "name": "PDM Audio (M2)",
+      "from": "U1",
+      "to": "M2",
+      "bus_type": "PDM",
+      "nets": [
+        { "name": "PDM_CLK", "type": "clock", "speed": "0.768-4.8 MHz", "note": "Shared with M1" },
+        { "name": "PDM_DIN", "type": "data", "speed": "0.768-4.8 MHz", "note": "Shared with M1 - L/R demux by clock edge" }
+      ],
+      "routing": { "criticality": "HIGH", "length_match_mm": 2, "crosses_flex": true }
+    },
+    {
+      "id": 3,
+      "name": "M1 Power",
+      "from": "U3",
+      "to": "M1",
+      "bus_type": "DC Power",
+      "nets": [
+        { "name": "VDD_MIC", "type": "power", "voltage": "1.8V" },
+        { "name": "GND", "type": "ground" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": true }
+    },
+    {
+      "id": 4,
+      "name": "M1 Config",
+      "from": "U1",
+      "to": "M1",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "MIC1_LR_SEL", "type": "static" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": true }
+    },
+    {
+      "id": 5,
+      "name": "M2 Power",
+      "from": "U3",
+      "to": "M2",
+      "bus_type": "DC Power",
+      "nets": [
+        { "name": "VDD_MIC", "type": "power", "voltage": "1.8V" },
+        { "name": "GND", "type": "ground" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": true }
+    },
+    {
+      "id": 6,
+      "name": "M2 Config",
+      "from": "U1",
+      "to": "M2",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "MIC2_LR_SEL", "type": "static" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": true }
+    },
+    {
+      "id": 7,
+      "name": "QSPI Flash",
+      "from": "U1",
+      "to": "U2",
+      "bus_type": "QSPI",
+      "nets": [
+        { "name": "QSPI_CLK", "type": "clock", "speed": "32-96 MHz" },
+        { "name": "QSPI_CS", "type": "chip_select" },
+        { "name": "QSPI_IO0", "type": "data", "speed": "32-96 MHz" },
+        { "name": "QSPI_IO1", "type": "data", "speed": "32-96 MHz" },
+        { "name": "QSPI_IO2", "type": "data", "speed": "32-96 MHz" },
+        { "name": "QSPI_IO3", "type": "data", "speed": "32-96 MHz" }
+      ],
+      "routing": { "criticality": "HIGH", "length_match_mm": 5, "crosses_flex": false, "note": "Place flash close to SoC, center zone" }
+    },
+    {
+      "id": 8,
+      "name": "PMIC Control",
+      "from": "U1",
+      "to": "U3",
+      "bus_type": "I2C",
+      "nets": [
+        { "name": "I2C_SCL", "type": "clock", "speed": "100-400 kHz" },
+        { "name": "I2C_SDA", "type": "data", "speed": "100-400 kHz" }
+      ],
+      "routing": { "criticality": "MEDIUM", "crosses_flex": false }
+    },
+    {
+      "id": 9,
+      "name": "PMIC Interrupt",
+      "from": "U3",
+      "to": "U1",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "PMIC_IRQ", "type": "interrupt", "active": "low" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 10,
+      "name": "PMIC Ship/Hold",
+      "from": "U1",
+      "to": "U3",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "PMIC_SHPHLD", "type": "control", "active": "low" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 11,
+      "name": "Haptic Control",
+      "from": "U1",
+      "to": "U4",
+      "bus_type": "I2C",
+      "nets": [
+        { "name": "I2C_SCL", "type": "clock", "speed": "100-400 kHz", "note": "Shared bus with PMIC" },
+        { "name": "I2C_SDA", "type": "data", "speed": "100-400 kHz", "note": "Shared bus with PMIC" }
+      ],
+      "routing": { "criticality": "MEDIUM", "crosses_flex": false }
+    },
+    {
+      "id": 12,
+      "name": "Haptic Enable",
+      "from": "U1",
+      "to": "U4",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "DRV_EN", "type": "enable" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 13,
+      "name": "Haptic Drive",
+      "from": "U4",
+      "to": "H1",
+      "bus_type": "Analog",
+      "nets": [
+        { "name": "LRA_OUT_P", "type": "analog", "freq": "150-250 Hz" },
+        { "name": "LRA_OUT_N", "type": "analog", "freq": "150-250 Hz" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false, "note": "Short run, center zone" }
+    },
+    {
+      "id": 14,
+      "name": "BLE RF",
+      "from": "U1",
+      "to": "ANT1",
+      "bus_type": "RF",
+      "nets": [
+        { "name": "RF_ANT", "type": "rf", "impedance_ohm": 50, "freq": "2.4 GHz" }
+      ],
+      "routing": { "criticality": "HIGH", "crosses_flex": false, "note": "50 ohm controlled impedance, no vias, center to edge" }
+    },
+    {
+      "id": 15,
+      "name": "Antenna Match",
+      "from": "ANT1",
+      "to": "FL1/FL2",
+      "bus_type": "Passive",
+      "nets": [
+        { "name": "RF_MATCH", "type": "rf", "note": "L/C matching network, part of RF path" }
+      ],
+      "routing": { "criticality": "HIGH", "crosses_flex": false }
+    },
+    {
+      "id": 16,
+      "name": "LED Red",
+      "from": "U1",
+      "to": "D1",
+      "bus_type": "GPIO PWM",
+      "nets": [
+        { "name": "LED_R", "type": "pwm", "speed": "kHz PWM" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 17,
+      "name": "LED Green",
+      "from": "U1",
+      "to": "D1",
+      "bus_type": "GPIO PWM",
+      "nets": [
+        { "name": "LED_G", "type": "pwm", "speed": "kHz PWM" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 18,
+      "name": "LED Blue",
+      "from": "U1",
+      "to": "D1",
+      "bus_type": "GPIO PWM",
+      "nets": [
+        { "name": "LED_B", "type": "pwm", "speed": "kHz PWM" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 19,
+      "name": "Button",
+      "from": "SW1",
+      "to": "U1",
+      "bus_type": "GPIO",
+      "nets": [
+        { "name": "BTN_IRQ", "type": "interrupt", "edge": "async" }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false }
+    },
+    {
+      "id": 20,
+      "name": "32MHz Crystal",
+      "from": "U1",
+      "to": "Y1",
+      "bus_type": "Analog",
+      "nets": [
+        { "name": "XC1", "type": "crystal", "freq": "32 MHz" },
+        { "name": "XC2", "type": "crystal", "freq": "32 MHz" }
+      ],
+      "routing": { "criticality": "HIGH", "crosses_flex": false, "note": "Within 5mm of SoC, guard ring ground, no routing under crystal" }
+    },
+    {
+      "id": 21,
+      "name": "32.768kHz Crystal",
+      "from": "U1",
+      "to": "Y2",
+      "bus_type": "Analog",
+      "nets": [
+        { "name": "XL1", "type": "crystal", "freq": "32.768 kHz" },
+        { "name": "XL2", "type": "crystal", "freq": "32.768 kHz" }
+      ],
+      "routing": { "criticality": "MEDIUM", "crosses_flex": false, "note": "Keep short" }
+    },
+    {
+      "id": 22,
+      "name": "Battery",
+      "from": "BT1",
+      "to": "U3",
+      "bus_type": "DC Power",
+      "nets": [
+        { "name": "BATT_P", "type": "power", "voltage": "3.0-4.2V", "current": "500mA" },
+        { "name": "BATT_N", "type": "ground" }
+      ],
+      "routing": { "criticality": "MEDIUM", "crosses_flex": false, "note": "Wide traces for current" }
+    },
+    {
+      "id": 23,
+      "name": "Charge Input",
+      "from": "J1/J2",
+      "to": "U3",
+      "bus_type": "DC Power",
+      "nets": [
+        { "name": "VBUS", "type": "power", "voltage": "5V", "current": "500mA" },
+        { "name": "GND", "type": "ground" }
+      ],
+      "routing": { "criticality": "MEDIUM", "crosses_flex": false, "note": "Wide traces for current" }
+    },
+    {
+      "id": 24,
+      "name": "UART (mfg only)",
+      "from": "U1",
+      "to": "J1",
+      "bus_type": "UART",
+      "nets": [
+        { "name": "UART_TX", "type": "data", "speed": "115.2-921.6 kbaud" },
+        { "name": "UART_RX", "type": "data", "speed": "115.2-921.6 kbaud", "optional": true }
+      ],
+      "routing": { "criticality": "LOW", "crosses_flex": false, "note": "Debug only, optional" }
+    }
+  ],
+
+  "pcb": {
+    "type": "4-layer rigid-flex",
+    "layers": [
+      { "name": "F.Cu", "type": "signal", "note": "Signal + components" },
+      { "name": "In1.Cu", "type": "power", "note": "GND plane (continuous)" },
+      { "name": "In2.Cu", "type": "power", "note": "VDD power plane" },
+      { "name": "B.Cu", "type": "signal", "note": "Signal + LRA pads" }
+    ],
+    "rigid_thickness_mm": 0.8,
+    "flex_thickness_mm": 0.175,
+    "rigid_sections": 3,
+    "flex_sections": 2,
+    "estimated_length_mm": 50,
+    "estimated_width_mm": 19,
+    "flex_length_mm": 6.5
+  }
+}

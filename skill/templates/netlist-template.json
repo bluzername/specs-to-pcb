@@ -1,0 +1,51 @@
+{
+  "_template": "Fill this with your project's component and interface data",
+  "project": "PROJECT_NAME",
+  "version": "1.0",
+
+  "power_rails": {
+    "VDD": { "voltage": "3.3V", "source": "Regulator", "consumers": ["MCU", "peripherals"] },
+    "GND": { "type": "ground" }
+  },
+
+  "components": {
+    "U1": {
+      "component": "MCU",
+      "part_number": "PART_NUMBER",
+      "package": "QFN-48",
+      "body_mm": [7.0, 7.0, 0.85],
+      "pads": 48,
+      "footprint": "Package_QFN:QFN-48"
+    }
+  },
+
+  "interfaces": [
+    {
+      "id": 1,
+      "name": "SPI Bus",
+      "from": "U1",
+      "to": "U2",
+      "bus_type": "SPI",
+      "nets": [
+        { "name": "SPI_CLK", "type": "clock", "speed": "10 MHz" },
+        { "name": "SPI_MOSI", "type": "data" },
+        { "name": "SPI_MISO", "type": "data" },
+        { "name": "SPI_CS", "type": "chip_select" }
+      ],
+      "routing": { "criticality": "HIGH", "length_match_mm": 5 }
+    }
+  ],
+
+  "pcb": {
+    "type": "4-layer",
+    "layers": [
+      { "name": "F.Cu", "type": "signal" },
+      { "name": "In1.Cu", "type": "power", "note": "GND plane" },
+      { "name": "In2.Cu", "type": "power", "note": "VDD plane" },
+      { "name": "B.Cu", "type": "signal" }
+    ],
+    "thickness_mm": 1.6,
+    "estimated_length_mm": 50,
+    "estimated_width_mm": 30
+  }
+}

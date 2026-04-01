@@ -1,0 +1,76 @@
+{
+  "_metadata": {
+    "target": "nRF5340-QKAA (aQFN94)",
+    "core": "Application core (Cortex-M33)",
+    "gpio_ports": "P0 (32 pins: P0.00-P0.31), P1 (16 pins: P1.00-P1.15)",
+    "sources": [
+      "nRF5340 Product Specification v2.x",
+      "nRF5340-DK (PCA10095) Zephyr devicetree",
+      "nRF5340 Audio DK (PCA10121) Zephyr devicetree",
+      "Nordic DevZone QSPI confirmation threads"
+    ]
+  },
+
+  "qspi": {
+    "_note": "DEDICATED/FIXED pins - hardware-wired, not reassignable",
+    "QSPI_IO0":  "P0.13",
+    "QSPI_IO1":  "P0.14",
+    "QSPI_IO2":  "P0.15",
+    "QSPI_IO3":  "P0.16",
+    "QSPI_SCK":  "P0.17",
+    "QSPI_CSN":  "P0.18"
+  },
+
+  "pdm": {
+    "_note": "CONFIGURABLE. ONE CLK + ONE DIN. Two mics share bus - L on falling edge, R on rising edge.",
+    "PDM_CLK":   "P1.04",
+    "PDM_DIN":   "P1.05"
+  },
+
+  "i2c": {
+    "_note": "CONFIGURABLE. Shared bus for nPM1300 (0x6B) and DRV2605L (0x5A). 4.7k external pull-ups required.",
+    "I2C_SCL":   "P1.03",
+    "I2C_SDA":   "P1.02"
+  },
+
+  "crystals": {
+    "XL1": "P0.00",
+    "XL2": "P0.01",
+    "XC1": "DEDICATED_PAD",
+    "XC2": "DEDICATED_PAD"
+  },
+
+  "rf": {
+    "ANT": "DEDICATED_PAD"
+  },
+
+  "rgb_led": {
+    "LED_R": "P0.07",
+    "LED_G": "P0.25",
+    "LED_B": "P0.26"
+  },
+
+  "haptic": {
+    "DRV_EN": "P1.06"
+  },
+
+  "button": {
+    "BTN_IRQ": "P1.07"
+  },
+
+  "pmic": {
+    "PMIC_IRQ":    "P0.04",
+    "PMIC_SHPHLD": "P0.05"
+  },
+
+  "uart_debug": {
+    "UART_TX": "P1.01",
+    "UART_RX": "P1.00"
+  },
+
+  "mic_config": {
+    "_note": "L/R select pins - static GPIO. M1 pulled to GND (left channel), M2 pulled to VDD (right channel).",
+    "MIC1_LR_SEL": "P1.08",
+    "MIC2_LR_SEL": "P1.09"
+  }
+}
