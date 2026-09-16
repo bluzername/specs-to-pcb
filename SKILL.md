@@ -48,17 +48,19 @@ Trigger this skill when the user:
 
 ## Prerequisites
 
-### Required (auto-installed by skill)
-- Python 3.10+
-- `kiutils` Python package
-- `kicad-sch-api` Python package
-
 ### Required (must be installed)
-- KiCad 8+ (`brew install --cask kicad` or download from kicad.org)
+- Python 3.10+
+- KiCad 10 (`brew install --cask kicad` or download from kicad.org); the format notes below were validated on 10.0.0
 - Java 17+ (`brew install openjdk@21`) - for FreeRouting autorouter
 
+### Python helper packages
+- `kiutils` and `kicad-sch-api`, pinned in `requirements.txt` at the skill root (`pip3 install -r requirements.txt`)
+- The example generators in `example/scripts/` write KiCad files directly and do not import either package; they are available for ad hoc file manipulation during a run
+
 ### Auto-downloaded
-- FreeRouting JAR (downloaded on first run)
+- FreeRouting JAR (`example/scripts/autoroute.sh` downloads it on first run; version set by `FREEROUTING_VERSION`, default 2.4.1)
+
+Run `bash scripts/check-prereqs.sh` from the skill root to verify all of the above. Optional items (Java, rsvg-convert, pcbnew) only warn.
 
 ## Input Requirements
 
@@ -118,16 +120,19 @@ Generate `.kicad_pcb` with:
 - Design rules and net classes
 - GND copper pour zones
 
-### Stage 5: Real Footprints + Autoroute
-Using KiCad's bundled Python (`pcbnew` module):
-1. Load the generated PCB
-2. Add real footprints from `.kicad_mod` libraries
-3. Assign nets to pads based on netlist
-4. Export Specctra DSN via `pcbnew.ExportSpecctraDSN()`
-5. Run FreeRouting CLI headless: `java -jar freerouting.jar -de board.dsn -do board.ses --gui.enabled=false`
-6. Import routes via `pcbnew.ImportSpecctraSES()`
+### Stage 5: Autoroute
+`example/scripts/autoroute.sh` is the shipped pipeline script. Copy it into the project's `scripts/` directory next to the generators and run it. It:
+1. Regenerates the project (`generate_kicad_project.py`) and footprints (`generate_footprints.py`)
+2. Runs ERC with `kicad-cli`
+3. Exports a Specctra DSN via `pcbnew.ExportSpecctraDSN()` using KiCad's bundled Python (no GUI). If that Python cannot be found it prints the manual File > Export > Specctra DSN instructions instead
+4. Runs FreeRouting CLI headless: `java -jar freerouting-<version>.jar -de board.dsn -do board.ses -mp 10 -mt 4 --gui.enabled=false`
+5. Runs DRC with `kicad-cli`
 
-**Critical:** Do all pcbnew operations in a single Python session - pcbnew saves in a newer format that it can't always re-read.
+Importing the routed `.ses` back into the board is not done by the script. Do it in a one-off KiCad Python session (`pcbnew.LoadBoard`, `pcbnew.ImportSpecctraSES(board, ses_path)`, `board.Save(path)`), or in the GUI via File > Import > Specctra SES.
+
+If the generated PCB uses placeholder footprints, add the real ones from the `.kicad_mod` libraries and assign pad nets in the same pcbnew session before exporting the DSN.
+
+**Critical:** Do all pcbnew operations that save the board in a single Python session - pcbnew saves in a newer format that it can't always re-read. DSN export alone does not save the board.
 
 ### Stage 6: Verification
 Run `kicad-cli` automated checks:
@@ -189,7 +194,7 @@ These format requirements were discovered through testing with KiCad 10.0.0:
 - `kicad-cli fp upgrade` validates format
 
 ### pcbnew Python API
-- Use KiCad's bundled Python: `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9`
+- Use KiCad's bundled Python. Find it with `ls /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/*/bin/python3` (10.0.x bundles 3.9; prefer the concrete version directory over `Current`). `autoroute.sh` and `check-prereqs.sh` discover it the same way and accept a `KICAD_PYTHON` override
 - `board.FindNet(name)` for net lookup (NOT `board.GetNetInfo().GetNetItem()`)
 - Don't Remove/Delete footprints from board (SWIG segfaults) - add new ones alongside
 - Do all operations in one session - pcbnew writes newer format than kicad-cli reads
@@ -216,18 +221,19 @@ project/
     review/           (generated)
     id-export/        (generated)
   scripts/
-    generate_kicad_project.py
-    generate_footprints.py
-    pcb_build_and_route.py
-    autoroute.sh
+    generate_kicad_project.py   (writes libs/, .kicad_sch, .kicad_pcb, .kicad_pro)
+    generate_footprints.py      (writes libs/<name>.pretty/*.kicad_mod)
+    autoroute.sh                (regen, ERC, DSN export, FreeRouting, DRC)
     pin_map.json
     netlist.json
 ```
 
+`example/scripts/` in the skill directory holds a complete, working instance of this layout (nRF5340 wearable). Use it as the template for new projects.
+
 ## Error Handling
 
 - If KiCad not installed: prompt user to `brew install --cask kicad`
-- If Java not installed: prompt user to `brew install openjdk@21`
+- If Java not installed: prompt user to `brew install openjdk@21` (note that macOS ships a `/usr/bin/java` stub that fails with "Unable to locate a Java Runtime"; the scripts validate `java -version` before trusting it)
 - If FreeRouting fails: skip routing, leave PCB with ratsnest
 - If ERC has errors: report them but don't block pipeline
 - If pcbnew crashes: fall back to kicad-cli for non-pcbnew steps
