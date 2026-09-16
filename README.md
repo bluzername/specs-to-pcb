@@ -69,7 +69,7 @@ Hardware Specs (PDF/CSV/text)
 git clone https://github.com/bluzername/specs-to-pcb.git ~/.claude/skills/specs-to-pcb
 ```
 
-Or manually copy the `skill/` directory contents to `~/.claude/skills/specs-to-pcb/`.
+`SKILL.md` lives at the repo root, so the clone itself is the skill directory.
 
 ### 2. Install prerequisites
 
