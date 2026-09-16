@@ -50,6 +50,10 @@ case "${1:-}" in
 esac
 PROJECT_NAME="${1:-${PROJECT_NAME:-}}"
 
+# Explicit overrides must point at something runnable; fail early if not.
+[ -z "${KICAD_CLI:-}" ] || [ -x "$KICAD_CLI" ] || die "KICAD_CLI=$KICAD_CLI is not executable"
+[ -z "${KICAD_PYTHON:-}" ] || [ -x "$KICAD_PYTHON" ] || die "KICAD_PYTHON=$KICAD_PYTHON is not executable"
+
 # Prints the first java that actually runs. macOS ships a /usr/bin/java stub
 # that exists but fails with "Unable to locate a Java Runtime".
 find_java() {
