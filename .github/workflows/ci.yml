@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile example scripts
+        run: python3 -m py_compile example/scripts/*.py
+
+      - name: Validate JSON
+        run: |
+          for f in example/scripts/*.json templates/*.json; do
+            echo "$f"
+            python3 -m json.tool "$f" >/dev/null
+          done
+
+      - name: Lint shell scripts
+        run: |
+          shellcheck -S style scripts/*.sh example/scripts/*.sh
+          bash -n scripts/*.sh example/scripts/*.sh
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          head -1 SKILL.md | grep -qx -- '---'
+          sed -n '2,/^---$/p' SKILL.md | grep -q '^name:'
+          sed -n '2,/^---$/p' SKILL.md | grep -q '^description:'
+
+      - name: Install pinned Python packages
+        run: |
+          pip install -r requirements.txt
+          python3 -c "import kiutils, kicad_sch_api"
+
+      - name: Prerequisite report
+        run: bash scripts/check-prereqs.sh --report-only

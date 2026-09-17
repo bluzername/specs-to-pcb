@@ -1,0 +1,2 @@
+kiutils==1.4.8
+kicad-sch-api==0.5.6
