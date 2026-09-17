@@ -76,7 +76,9 @@ find_java() {
                      /opt/homebrew/opt/openjdk@21/bin/java \
                      /opt/homebrew/opt/openjdk@17/bin/java \
                      /opt/homebrew/opt/openjdk/bin/java; do
-        [ -n "$candidate" ] && [ -x "$candidate" ] || continue
+        if [ -z "$candidate" ] || [ ! -x "$candidate" ]; then
+            continue
+        fi
         if "$candidate" -version >/dev/null 2>&1; then
             printf '%s\n' "$candidate"
             return 0
